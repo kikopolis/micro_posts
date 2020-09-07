@@ -1,0 +1,59 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}{{ user.username }}' Profile page{% endblock %}
+
+{% block body %}
+	{% set firstName = user.fullname|split(' ').0|capitalize %}
+	
+	{{ include('users/profile/_large-card.html.twig') }}
+	
+	<div class="row mt-4 py-4">
+		<div class="col-12 shadow mx-auto">
+			{% if user.profile.bio %}
+				<p class="text-black-50">{{ user.profile.bio }}</p>
+			{% else %}
+				<h6 class="text-center">This user has not yet filled out their story</h6>
+			{% endif %}
+		</div>
+	</div>
+	
+	<div class="row mt-4">
+		<div class="col-12 shadow mx-auto">
+			{% if user.posts.count > 0 %}
+				<h4 class="text-black-50 text-center card-header">{{ firstName }}'s posts</h4>
+				{% for post in user.posts %}
+					{% if loop.index < 6 %}
+						<div class="col-12 m-3 pt-3 pb-1 shadow-sm">
+							<p class="text-center text-muted small">Click the post text to view full post with comments</p>
+							<a class="text-decoration-none" href="{{ path('post.show', {'id': post.id}) }}">{{ post.body }}</a>
+							<p class="text-muted">{{ post.comments.count }} comments</p>
+						</div>
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<h4 class="text-black-50 text-center">{{ firstName }} has no posts</h4>
+			{% endif %}
+		</div>
+	</div>
+	
+	<div class="row mt-4">
+		<div class="col-12 shadow mx-auto">
+			{% if user.postsLiked.count > 0 %}
+				<h4 class="text-black-50 text-center card-header">Posts {{ firstName }} likes</h4>
+				{% for post in user.postsLiked %}
+					{% if loop.index < 6 %}
+						<div class="col-12 m-3 pt-3 pb-1 shadow">
+							<p class="text-center text-muted small">Click the post text to view full post with comments</p>
+							<a class="text-decoration-none" href="{{ path('post.show', {'id': post.id}) }}">{{ post.body }}</a>
+							<p class="text-muted">{{ post.comments.count }} comments</p>
+						</div>
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				<h4 class="text-black-50 text-center">{{ firstName }} does not like any posts</h4>
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock %}
+

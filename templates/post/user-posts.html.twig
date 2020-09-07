@@ -1,0 +1,11 @@
+{% extends 'base/base.html.twig' %}
+
+{% block body %}
+	
+	{{ include('profile/_large-card.html.twig') }}
+	
+	{% for post in posts %}
+		{{ include('post/_post.html.twig') }}
+	{% endfor %}
+
+{% endblock %}

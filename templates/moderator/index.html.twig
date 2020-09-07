@@ -1,0 +1,18 @@
+{% extends 'base/base.html.twig' %}
+
+{% block body %}
+	<a class="dropdown-item" href="{{ path('mod.posts.index') }}">Review All Posts</a>
+	<a class="dropdown-item" href="{{ path('mod.comments.index') }}">Review All Comments</a>
+	<a class="dropdown-item" href="{{ path('mod.post.un.report') }}">Review Reported Posts</a>
+	<a class="dropdown-item" href="{{ path('mod.comments.reported') }}">Review Reported Comments</a>
+	<a class="dropdown-item" href="{{ path('mod.un.approved.posts') }}">Approve New Posts</a>
+	<a class="dropdown-item" href="{{ path('mod.comments.un.approved') }}">Approve New Comments</a>
+	{% if is_granted('ROLE_ADMINISTRATOR') %}
+		<a class="dropdown-item" href="{{ path('admin.users.index') }}">Manage Users</a>
+	{% endif %}
+	<a class="dropdown-item" href="{{ path('mod.index') }}">Moderator Home</a>
+	
+	{% for note in notifications %}
+		{{ note.id }}
+	{% endfor %}
+{% endblock %}

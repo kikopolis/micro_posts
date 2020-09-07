@@ -1,0 +1,7 @@
+<div class="row container mx-auto">
+	{% for comment in comments %}
+		<div class="col-12">
+			{{ include('comment/_comment.html.twig') }}
+		</div>
+	{% endfor %}
+</div>

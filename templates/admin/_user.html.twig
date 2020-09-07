@@ -1,0 +1,21 @@
+<div class="row media pt-3 border-bottom border-gray pb-4">
+	<div class="col-sm-12 col-md-6">
+		<h5>Username - {{ user.username }}</h5>
+		<p>Full name - {{ user.fullname }}</p>
+		<p>Email - {{ user.email }}</p>
+		<p>User role -
+			<span>
+                    {% for role in user.roles %}
+	                    {{ role }}
+                    {% endfor %}
+                </span>
+		</p>
+	</div>
+	<div class="col-sm-12 col-md-6">
+		<a href="{{ path('user.edit', { 'id': user.id }) }}" class="btn btn-outline-primary btn-sm">Edit user</a>
+		<a href="{{ path('profile.edit', {'username': user.username}) }}" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+		<a href="{{ path('preferences.edit', {'username': user.username}) }}" class="btn btn-outline-secondary btn-sm">Edit Settings</a>
+		<a href="{{ path('admin.user.delete', {'id': user.id}) }}" class="btn btn-outline-danger btn-sm">Delete User</a>
+	</div>
+	<hr>
+</div>

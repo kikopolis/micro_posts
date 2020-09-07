@@ -1,0 +1,15 @@
+<div class="row mt-5 p-2">
+	<div class="col-12 row">
+		<h4 class="text-dark mx-auto">Preferences</h4>
+	</div>
+	<div class="col-6">
+		{% if user.preferences.sortHomePageBy is same as(0) %}
+			<p class="text-dark">Home page posts are sorted newest first.</p>
+		{% elseif user.preferences.sortHomePageBy is same as(1) %}
+			<p class="text-dark">Home page posts are sorted newest first and only posts by users you follow are shown.</p>
+		{% endif %}
+	</div>
+	<div class="col-6">
+
+	</div>
+</div>

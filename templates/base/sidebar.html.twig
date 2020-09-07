@@ -1,0 +1,52 @@
+<div class="row">
+	<div class="col-12 mt-5">
+		<h3>Search goes here</h3>
+	</div>
+	<hr class="w-100">
+	<div class="col-12">
+		<h4 class="text-black-50">Account</h4>
+		{% if not app.user %}
+			<a class="text-primary text-decoration-none d-block text-left" href="{{ path('register') }}">
+				Register
+			</a>
+			<a class="text-primary text-decoration-none d-block text-left" href="{{ path('login') }}">
+				Login
+			</a>
+		{% else %}
+			<a class="text-primary text-decoration-none d-block text-left" href="{{ path('profile.self') }}">
+				View my profile
+			</a>
+			<a class="text-primary text-decoration-none d-block text-left" href="{{ path('user.show') }}">
+				View my account
+			</a>
+			<hr class="w-100">
+			<a class="text-primary text-decoration-none d-block text-left" href="{{ path('profile.edit') }}">
+				Edit profile
+			</a>
+			<a class="text-primary text-decoration-none d-block text-left" href="{{ path('user.edit') }}">
+				Edit account
+			</a>
+			<a class="text-primary text-decoration-none d-block text-left" href="{{ path('preferences.edit') }}">
+				Edit preferences
+			</a>
+			<a class="text-secondary text-decoration-none d-block text-left" href="{{ path('logout') }}">
+				Logout
+			</a>
+		{% endif %}
+	</div>
+	<hr class="w-100">
+	<div class="col-12">
+		<h4 class="text-black-50">Posts</h4>
+		<a class="text-primary text-decoration-none d-block text-left" href="{{ path('post.index') }}">
+			Index
+		</a>
+		{% if app.user %}
+			<a class="text-primary text-decoration-none d-block text-left" href="{{ path('post.create') }}">
+				New
+			</a>
+			<a class="text-primary text-decoration-none d-block text-left" href="{{ path('posts.for.user', {'username': app.user.username}) }}">
+				View own posts
+			</a>
+		{% endif %}
+	</div>
+</div>

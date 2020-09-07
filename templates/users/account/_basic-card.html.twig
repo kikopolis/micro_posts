@@ -1,0 +1,21 @@
+<div class="row mt-5 p-2">
+	<div class="col-6">
+		<div class="col-12 row">
+			<h4 class="text-dark mx-auto">Account</h4>
+		</div>
+		<p>Email - {{ user.email }}</p>
+		<p>Full Name - {{ user.fullName }}</p>
+		<p>Username - {{ user.username }}</p>
+		<p>Registered on - {{ user.createdAt|date }}</p>
+	</div>
+	<div class="col-6">
+		<div class="col-12 row">
+			<h4 class="text-dark mx-auto">Activity</h4>
+		</div>
+		<p>Last edited account - {{ user.updatedAt|date }}</p>
+		<p>Posts - {{ user.posts.count }}</p>
+		<p>Posts Liked - {{ user.postsLiked.count }}</p>
+		<p>Comments - {{ user.comments.count }}</p>
+		<p>Comments Liked - {{ user.commentsLiked.count }}</p>
+	</div>
+</div>

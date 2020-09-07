@@ -1,0 +1,12 @@
+{% extends 'base/base.html.twig' %}
+
+{% block body %}
+	<h2>Registration issues</h2>
+	<h4>I have not received a registration confirmation token!</h4>
+	<p>Click <a href="{{ path('new.account.activation.token') }}">here</a> to request a new code</p>
+{% endblock %}
+
+{% block title %}
+Kikopolis Help And FAQ section
+{% endblock %}
+

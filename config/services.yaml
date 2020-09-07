@@ -1,0 +1,46 @@
+parameters:
+    locale: 'en'
+    mailFrom: '%env(MAILER_FROM)%'
+    mailTo: '%env(MAILER_TO)%'
+    # Make sure the upload and relative dbDir dir match.
+    # dbDir is added to the returned filename of FileUploader to make uploading and managing files easier.
+    uploadDirectory: '%kernel.project_dir%/public/uploads/'
+    dbDirectory: '/uploads/'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        bind:
+            $defaultLocale: '%kernel.default_locale%'
+            $mailFrom: '%mailFrom%'
+            $mailTo: '%mailTo%'
+            $uploadDirectory: '%uploadDirectory%'
+            $dbDirectory: '%dbDirectory%'
+    
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+    
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+    
+    Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
+    
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments:
+            - 'mysql:dbname=micro_post; host=127.0.0.1; port=3306'
+            - { db_table: sessions, db_username: root, db_password:  }
+            - { lock_mode: 1 }
+    App\EventListener\BeforeRequestListener:
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            -   name: kernel.event_listener
+                event: kernel.request
+                method: onKernelRequest
+    
+    # These necessary for User\CreateSubscriber constructor
+    App\Entity\UserProfile: ~
+    App\Entity\UserPreferences: ~

@@ -1,0 +1,50 @@
+<div class="col-12 mx-auto mb-4 pb-3 shadow border-light">
+	<div class="row card-header">
+		<div class="col-4 row">
+			{% set user = post.author %}
+			{{ include('users/profile/_small-card.html.twig') }}
+		</div>
+		<div class="col-4 text-center">
+			{% if app.user is same as (post.author) or is_granted('ROLE_ADMINISTRATOR', app.user) %}
+				<a class="text-secondary text-decoration-none" href="{{ path('post.edit', {'id': post.id}) }}">Edit</a>
+				{% if post.trashed %}
+					<a class="ml-3 text-danger text-decoration-none" href="{{ path('post.restore', {'id': post.id}) }}">Restore</a>
+				{% else %}
+					<a class="ml-3 text-danger text-decoration-none" href="{{ path('post.trash', {'id': post.id}) }}">Trash</a>
+				{% endif %}
+			{% endif %}
+		</div>
+		<div class="col-4 text-muted">
+			Posted on {{ post.createdAt|date }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-11 mx-auto p-2 mb-3 mt-4 shadow-sm">
+			<p class="text-dark">{{ post.body|striptags('<a><img>')|raw }}</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-6">
+			{% if app.user %}
+				{% if app.user.id is not same as(post.author.id) %}
+					{% if app.user.postsLiked.contains(post) %}
+						<a class="btn btn-sm btn-outline-warning" href="{{ path('post.un.like', {'id': post.id}) }}">Unlike!</a>
+					{% else %}
+						<a class="btn btn-sm btn-outline-primary" href="{{ path('post.like', {'id': post.id}) }}">Like!</a>
+					{% endif %}
+					<a class="ml-3 btn btn-sm btn-outline-danger" href="{{ path('post.report', {'id': post.id}) }}">Inappropriate post</a>
+				{% endif %}
+			{% endif %}
+		</div>
+		<div class="col-6 text-right">
+			{% if 'post-show-single' not in app.request.attributes.get('_route') %}
+				{% if post.comments.count > 0 %}
+					<a class="btn btn-sm btn-outline-info" href="{{ path('post.show', {'id': post.id}) }}">View with comments</a>
+				{% else %}
+					<a class="text-secondary text-decoration-none" href="{{ path('post.show', {'id': post.id}) }}">No comments yet!</a>
+				{% endif %}
+			{% endif %}
+			<a class="ml-3 btn btn-sm btn-outline-primary" href="{{ path('comment.create', {'id': post.id}) }}">Add a comment</a>
+		</div>
+	</div>
+</div>

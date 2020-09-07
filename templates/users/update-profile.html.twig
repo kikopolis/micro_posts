@@ -1,0 +1,11 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}Edit profile info - avatar, bio and more!{% endblock %}
+
+{% block body %}
+	{{ include('users/_account-controls.html.twig') }}
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	{{ form_end(form) }}
+{% endblock %}
+

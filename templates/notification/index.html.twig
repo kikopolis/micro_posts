@@ -1,0 +1,50 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}
+	All notifications
+{% endblock %}
+
+{% block body %}
+	{% if newNotifications is defined and newNotifications|length %}
+		<div class="card">
+			<div class="card-body">
+				<h5>New notifications</h5>
+			</div>
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item">
+					<a href="{{ path('notification-all-set-seen') }}"
+					   class="btn btn-block btn-outline-info">Mark all as read</a>
+				</li>
+				{% for notification in newNotifications %}
+					<li class="list-group-item">
+						<a href="{{ path('notification-set-seen', { 'id': notification.id }) }}"
+						   class="btn btn-sm btn-primary float-right">Ok</a>
+						{{ include('notification/_notification-show.html.twig') }}
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	{% else %}
+		<div class="card">
+			<div class="card-body">
+				<h5>No new notifications</h5>
+			</div>
+		</div>
+	{% endif %}
+	
+	{% if oldNotifications is defined and oldNotifications|length %}
+		<div class="card">
+			<div class="card-body">
+				<h5>All notifications</h5>
+			</div>
+			<ul class="list-group list-group-flush">
+				{% for notification in oldNotifications %}
+					<li class="list-group-item">
+						{{ include('notification/_notification-show.html.twig') }}
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
+{% endblock %}
+

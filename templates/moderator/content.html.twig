@@ -1,0 +1,50 @@
+{% extends 'base/base.html.twig' %}
+
+{% block body %}
+	{{ include('base/_pagination.html.twig') }}
+	
+	{% if pagination is empty %}
+		<h4 class="alert alert-info">No data to show. Please try again or choose something else to moderate.</h4>
+	{% else %}
+		
+		{% for item in pagination %}
+			
+			{% if item is post %}
+				{% set post = item %}
+				{{ include('moderator/_post.html.twig') }}
+			{% endif %}
+			
+			{% if item is comment %}
+				{% set comment = item %}
+				{{ include('moderator/_comment.html.twig') }}
+			{% endif %}
+			
+			{% if item is user and is_granted('ROLE_ADMINISTRATOR') %}
+				{% set user = item %}
+				{{ include('admin/_user.html.twig') }}
+			{% endif %}
+		
+		{% endfor %}
+	
+	{% endif %}
+	
+	{# {% if posts is defined and posts is not empty %} #}
+	{# {% for post in posts %} #}
+	{# {{ include('moderator/_post.html.twig') }} #}
+	{# {% endfor %} #}
+	{# {% endif %} #}
+	{# #}
+	{# {% if comments is defined and comments is not empty %} #}
+	{# {% for comment in comments %} #}
+	{# {{ include('moderator/_comment.html.twig') }} #}
+	{# {% endfor %} #}
+	{# {% endif %} #}
+	{# #}
+	{# {% if users is defined and users is not empty and is_granted('ROLE_ADMINISTRATOR') %} #}
+	{# {% for user in users %} #}
+	{# {{ include('moderator/_user.html.twig') }} #}
+	{# {% endfor %} #}
+	{# {% endif %} #}
+	
+	{{ include('base/_pagination.html.twig') }}
+{% endblock %}

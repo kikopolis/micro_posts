@@ -1,0 +1,38 @@
+<div class="media pt-3 border-bottom border-gray pb-4">
+	<div class="row w-100">
+		<div class="col-12">
+	        <span class="d-block">
+	            <a class="d-inline mx-0 px-0 text-gray-dark font-weight-bold"
+	               href="{{ path('profile.by.username', {'username': comment.user.username }) }}">
+	                @{{ comment.user.username }}
+	            </a>
+	            <small class="float-right light-blue-text">{{ comment.createdAt|date }}</small>
+	        </span>
+		</div>
+		<div class="row w-100">
+			<div class="col-11 mx-auto p-2 mb-3 mt-4 shadow-sm">
+				<p class="text-dark">{{ comment.body }}</p>
+			</div>
+		</div>
+	</div>
+	<div>
+		{% if comment.approved %}
+			<a href="{{ path('mod.comment.un.approve', {'id': comment.id }) }}" class="m-2 btn btn-outline-success btn-sm">Un-Approve</a>
+		{% else %}
+			<a href="{{ path('mod.comment.approve', {'id': comment.id }) }}" class="m-2 btn btn-outline-success btn-sm">Approve</a>
+		{% endif %}
+		
+		{% if comment.reported %}
+			<a href="{{ path('mod.comment.un.report', {'id': comment.id }) }}" class="m-2 btn btn-outline-success btn-sm">Clear Reports</a>
+		{% endif %}
+		
+		<a href="{{ path('comment.edit', {'id': comment.id }) }}" class="m-2 btn btn-outline-primary btn-sm">Edit</a>
+		
+		{% if comment.trashed %}
+			<a href="{{ path('mod.comment.delete', {'id': comment.id }) }}" class="m-2 btn btn-outline-danger btn-sm">Delete</a>
+		{% else %}
+			<a href="{{ path('comment.trash', {'id': comment.id }) }}" class="m-2 btn btn-outline-danger btn-sm">Trash</a>
+		{% endif %}
+	
+	</div>
+</div>

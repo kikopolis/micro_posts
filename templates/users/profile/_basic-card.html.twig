@@ -1,0 +1,28 @@
+<div class="row mt-5 p-2">
+	<div class="col-12 row">
+		<h4 class="text-dark mx-auto">Profile Summary</h4>
+	</div>
+	<div class="col-6">
+		{% if user.profile.avatar is defined %}
+			<div class="col-5 mx-auto">
+				<img class="shadow rounded-circle img-fluid" src="{{ asset(user.profile.avatar) }}" alt="{{ user.username }}'s avatar">
+			</div>
+		{% else %}
+			<div class="col-7 mx-auto">
+				<img class="shadow rounded-circle img-fluid" src="{{ asset('public/images/defaultUserAvatar/defaultAvatar.jpg') }}" alt="Default avatar">
+			</div>
+		{% endif %}
+	</div>
+	<div class="col-6">
+		{% if user.profile.birthday is defined %}
+			<p class="text-black-50">Birthday - {{ user.profile.birthday|date('d/m/y') }}</p>
+		{% else %}
+			<p class="text-black-50">No birthday is saved yet.</p>
+		{% endif %}
+		{% if user.profile.bio is defined and user.profile.bio is not empty %}
+			<p class="text-black">Bio - {{ user.profile.bio }}</p>
+		{% else %}
+			<p class="text-black">No bio is written yet.</p>
+		{% endif %}
+	</div>
+</div>

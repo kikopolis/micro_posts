@@ -1,0 +1,39 @@
+<div class="col-12 mx-auto mb-4 pb-3 shadow border-light">
+	<div class="row card-header">
+		<div class="col-4 row">
+			{% set user = comment.author %}
+			{{ include('users/profile/_small-card.html.twig') }}
+		</div>
+		<div class="col-4 text-center">
+		
+		</div>
+		<div class="col-4 text-muted">
+			Posted on {{ comment.createdAt|date }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-11 mx-auto p-2 mb-3 mt-4 shadow-sm">
+			<p class="text-dark">{{ comment.body|striptags('<a><img>')|raw }}</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12 text-center">
+			{% if app.user %}
+				{% if app.user.commentsLiked.contains(comment) %}
+					<a class="btn btn-sm btn-outline-warning" href="{{ path('comment.un.like', {'id': comment.id}) }}">Unlike!</a>
+				{% else %}
+					<a class="btn btn-sm btn-outline-primary" href="{{ path('comment.like', {'id': comment.id}) }}">Like!</a>
+				{% endif %}
+			{% endif %}
+			<a class="ml-3 btn btn-sm btn-outline-danger" href="{{ path('comment.report', {'id': comment.id}) }}">Inappropriate comment</a>
+			{% if app.user is same as (comment.author) or is_granted('ROLE_ADMINISTRATOR', app.user) %}
+				<a class="ml-3 text-secondary text-decoration-none" href="{{ path('comment.edit', {'id': comment.id}) }}">Edit</a>
+				{% if comment.trashed %}
+					<a class="ml-3 text-danger text-decoration-none" href="{{ path('comment.restore', {'id': comment.id}) }}">Restore</a>
+				{% else %}
+					<a class="ml-3 text-danger text-decoration-none" href="{{ path('comment.trash', {'id': comment.id}) }}">Trash</a>
+				{% endif %}
+			{% endif %}
+		</div>
+	</div>
+</div>

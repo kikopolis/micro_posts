@@ -1,0 +1,16 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}Showing single Micro Post{% endblock %}
+
+{% block body %}
+	<div class="row pt-4">
+		<h1 class="text-dark mx-auto">Microscopic Post with the id of {{ post.id }}</h1>
+	</div>
+	<div class="row">
+		{{ include('post/_post.html.twig') }}
+	</div>
+	<div class="row">
+		{% set comments = post.comments %}
+		{{ include('comment/_comments-collection.html.twig') }}
+	</div>
+{% endblock %}

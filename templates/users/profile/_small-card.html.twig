@@ -1,0 +1,22 @@
+{% if user.profile.avatar is defined %}
+	<div class="col-6 d-inline-block">
+		<a href="{{ path('profile.by.username', {'username': user.username}) }}">
+			<img class="shadow rounded-circle img-fluid" src="{{ asset(user.profile.avatar) }}" alt="{{ user.username }}'s avatar">
+		</a>
+	</div>
+{% endif %}
+<div class="col-6 flex-column">
+	<a class="d-block text-decoration-none" href="{{ path('profile.by.username', {'username': user.username}) }}">@{{ user.username }}</a>
+	{% if app.user %}
+		{% if user.followers.contains(app.user) %}
+			<div class="text-center mt-3">
+				<a class="text-decoration-none" href="{{ path('un.follow.user', {'username': user.username}) }}">Un-follow</a>
+			</div>
+		{% else %}
+			<div class="text-center mt-3">
+				<a class="text-decoration-none" href="{{ path('follow.user', {'username': user.username}) }}">Follow</a>
+			</div>
+		{% endif %}
+	{% endif %}
+	<a class="d-block text-secondary text-decoration-none" href="{{ path('posts.for.user', {'username': user.username}) }}">View posts</a>
+</div>

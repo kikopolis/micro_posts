@@ -1,0 +1,11 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}My account, profile and preferences{% endblock %}
+
+{% block body %}
+	{{ include('users/_account-controls.html.twig') }}
+	{{ include('users/account/_basic-card.html.twig') }}
+	{{ include('users/profile/_basic-card.html.twig') }}
+	{{ include('users/preferences/_basic-card.html.twig') }}
+	{{ include('users/_account-controls.html.twig') }}
+{% endblock %}

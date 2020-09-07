@@ -1,0 +1,35 @@
+<h1>Weekly statistics</h1>
+
+<h2>All time top posts</h2>
+{% for post in allTimeTopPosts %}
+	{{ loop.index }} - <a class="text-decoration-none" href="{{ url('post.show', {'id': post.id}) }}">Post ID - {{ post.id }}</a><br>
+{% endfor %}
+
+<h2>Weekly top posts</h2>
+{% for post in weeklyTopPosts %}
+	{{ loop.index }} - <a class="text-decoration-none" href="{{ url('post.show', {'id': post.id}) }}">Post ID - {{ post.id }}</a><br>
+{% endfor %}
+
+<h2>All time top viewed posts</h2>
+{% for post in allTimeMostViewedPosts %}
+	{{ loop.index }} - <a class="text-decoration-none" href="{{ url('post.show', {'id': post.id}) }}">Post ID - {{ post.id }}</a><br>
+{% endfor %}
+
+<h2>Weekly top viewed posts</h2>
+{% for post in weeklyMostViewedPosts %}
+	{{ loop.index }} - <a class="text-decoration-none" href="{{ url('post.show', {'id': post.id}) }}">Post ID - {{ post.id }}</a><br>
+{% endfor %}
+
+<h2>All time top comments</h2>
+{% for comment in allTimeTopComments %}
+	{{ loop.index }} - <a class="text-decoration-none" href="{{ url('post.show', {'id': comment.post.id}) }}">Post ID - {{ comment.post.id }}</a><br>
+{% endfor %}
+
+<h2>Weekly top comments</h2>
+{% for comment in weeklyTopComments %}
+	{{ loop.index }} - <a class="text-decoration-none" href="{{ url('post.show', {'id': comment.post.id}) }}">Post ID - {{ comment.post.id }}</a><br>
+{% endfor %}
+
+<h2>All time visitor count</h2>
+
+<h2>Weekly visitor count</h2>

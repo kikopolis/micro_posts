@@ -1,0 +1,26 @@
+namespace: App\Tests
+bootstrap: bootstrap.php
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+actor_suffix: Tester
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
+        - Codeception\Extension\Recorder:
+              delete_successful: false
+params:
+    - .env
+    - .env.local
+coverage:
+    enabled: true
+    include:
+        - src/*
+    exclude:
+        - src/Command
+        - src/Datafixtures
+        - src/Kernel.php
+        - src/*Exception.php

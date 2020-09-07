@@ -1,0 +1,45 @@
+<div class="row mt-5 p-2">
+	<div class="col-6">
+		{% if user.profile.avatar is defined %}
+			<div class="col-5 mx-auto">
+				<a href="{{ path('profile.by.username', {'username': user.username}) }}">
+					<img class="shadow rounded-circle img-fluid" src="{{ asset(user.profile.avatar) }}" alt="{{ user.username }}'s avatar">
+				</a>
+			</div>
+		{% else %}
+			<div class="col-7 mx-auto">
+				<img class="shadow rounded-circle img-fluid" src="{{ asset('public/images/defaultUserAvatar/defaultAvatar.jpg') }}" alt="Default avatar">
+			</div>
+		{% endif %}
+		{% if app.user %}
+			{% if app.user is same as (user) or is_granted('ROLE_ADMINISTRATOR', app.user) %}
+				<div class="text-center mt-3">
+					<a class="text-decoration-none" href="{{ path('profile.edit', {'username': user.username}) }}">Edit</a>
+				</div>
+			{% elseif app.user %}
+				{% if user.followers.contains(app.user) %}
+					<div class="text-center mt-3">
+						<a class="text-decoration-none" href="{{ path('un.follow.user', {'username': user.username}) }}">Un-follow</a>
+					</div>
+				{% else %}
+					<div class="text-center mt-3">
+						<a class="text-decoration-none" href="{{ path('follow.user', {'username': user.username}) }}">Follow</a>
+					</div>
+				{% endif %}
+			{% endif %}
+		{% endif %}
+		<p class="text-black-50 mt-2 text-center">Member since {{ user.createdAt|date('M/Y') }}</p>
+	</div>
+	<div class="col-6">
+		<p class="text-black-50">Username - {{ user.username }}</p>
+		<p class="text-black-50">Full name - {{ user.fullname }}</p>
+		{% if user.profile.birthday is defined %}
+			<p class="text-black-50">Birthday - {{ user.profile.birthday|date('d/m/y') }}</p>
+		{% endif %}
+		{% if app.user %}
+			{% if app.user.id is not same as(user.id) %}
+				<a class="text-decoration-none" href="{{ path('conversations.new.message', {'id': user.id}) }}">Send a message</a>
+			{% endif %}
+		{% endif %}
+	</div>
+</div>

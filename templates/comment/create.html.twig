@@ -1,0 +1,55 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}Add a new Comment{% endblock %}
+
+{% block body %}
+	<div class="row mt-5 mb-5">
+		<h1 class="text-secondary text-center col">Add a new Comment</h1>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<h4 class="text-center col-12 text-secondary">Replying to post</h4>
+			<a class="text-center d-block text-decoration-none" href="{{ path('profile.by.username', {'username': post.author.username}) }}">
+				Posted by @{{ post.author.username }}
+			</a>
+			<div class="col-11 mx-auto p-2 mb-3 mt-4 shadow-sm">
+				<p class="text-dark">{{ post.body }}</p>
+			</div>
+			<div class="col-12">
+			</div>
+		</div>
+	</div>
+	<div class="row mb-5">
+		<div class="col-12">
+			{{ include('base/_form.html.twig') }}
+		</div>
+	</div>
+	<div class="row mb-5">
+		<div class="col-12 text-center">
+			<h4>Maximum of 280 characters! - <span id="characterCount" class="alert alert-success">0</span></h4>
+			<h5>Don't forget to browse our terms of service and the rules for posting!!</h5>
+			<a class="btn btn-lg btn-danger" href="{{ path('terms.and.conditions') }}">Read them here</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		let textArea = document.getElementById('comment_body');
+		let characterCount = document.getElementById('characterCount');
+		textArea.addEventListener('keyup', function () {
+			characterCount.innerText = textArea.value.length;
+			if (textArea.value.length > 280)
+			{
+				characterCount.classList.add('alert-danger');
+				characterCount.classList.remove('alert-success');
+			}
+			else
+			{
+				characterCount.classList.remove('alert-danger');
+				characterCount.classList.add('alert-success');
+			}
+		})
+	</script>
+{% endblock %}

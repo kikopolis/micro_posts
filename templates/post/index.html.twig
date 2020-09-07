@@ -1,0 +1,31 @@
+{% extends 'base/base.html.twig' %}
+
+{% block body %}
+	<h1>All post index</h1>
+	{# If there is a users to follow array defined and recommended to the current user #}
+	{% if usersToFollow is defined and usersToFollow|length > 0 and is_granted('ROLE_USER') %}
+		<div class="border-bottom border-gray border-light shadow my-3 p-3 alert alert-light">
+			<h5 class="text-dark">You currently do not follow anyone. You might find these users interesting: </h5>
+			{% for userToFollow in usersToFollow %}
+			<a href="{{ path('profile.by.username', { 'username': userToFollow.username, 'page': 1 }) }}">
+				@{{ userToFollow.username }}</a>{% if loop.last == false %},{% endif %}
+			{% endfor %}
+		</div>
+	{% endif %}
+	
+	{% if pagination is not defined %}
+		<div class="alert alert-warning mt-5">
+			<h4 class="alert-heading">There are no posts to display.</h4>
+			<hr>
+			<p>Try to refresh the page or narrow your search parameters. Also, try to go back to the main page and navigating from there again.</p>
+			<p>If that does not work, contact the administrator.</p>
+		</div>
+	{% else %}
+		{{ include('base/_pagination.html.twig') }}
+		{{ include('post/_posts-collection.html.twig') }}
+		{{ include('base/_pagination.html.twig') }}
+	{% endif %}
+
+{% endblock %}
+
+{% block title %}{% if title is defined %}{{ title }}{% else %}Glorious microscopical letters{% endif %}{% endblock %}

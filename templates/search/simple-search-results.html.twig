@@ -1,0 +1,40 @@
+{% extends "base/base.html.twig" %}
+
+{% block title %}
+	Search results
+{% endblock %}
+
+{% block body %}
+	<div class="alert alert-info">
+		<h4>Search will look for posts, comments and usernames of the related term.</h4>
+	</div>
+	{% if pagination is defined and pagination is not empty %}
+		{{ knp_pagination_render(pagination) }}
+		
+		{% for result in pagination %}
+			
+			{% if result is post %}
+				{% set post = result %}
+				{{ include('search/result/_post.html.twig') }}
+			{% endif %}
+			
+			{% if result is comment %}
+				{% set comment = result %}
+				{{ include('search/result/_comment.html.twig') }}
+			{% endif %}
+			
+			{% if result is user %}
+				{% set user = result %}
+				{{ include('search/result/_user.html.twig') }}
+			{% endif %}
+		
+		{% endfor %}
+		
+		{{ knp_pagination_render(pagination) }}
+	
+	{% else %}
+		<div class="alert alert-warning">
+			<h5>No results for query. Please try again!</h5>
+		</div>
+	{% endif %}
+{% endblock %}

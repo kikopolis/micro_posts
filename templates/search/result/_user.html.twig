@@ -1,0 +1,10 @@
+<div class="col-12 mx-auto mb-4 p-3 shadow border-light">
+	<div class="row">
+		<div class="col-4">
+			{{ include('profile/_small-card.html.twig') }}
+		</div>
+		<div class="col-4">
+			This user has posted a total of {{ user.posts|length }} posts and {{ user.comments|length }} comments.
+		</div>
+	</div>
+</div>

@@ -1,0 +1,15 @@
+<div class="row">
+	<h6 class="mx-auto text-dark">
+		Account Actions
+	</h6>
+</div>
+<div class="row">
+	<a href="{{ path('user.edit') }}" class="btn btn-outline-primary btn-sm mx-auto">Account</a>
+	<a href="{{ path('profile.edit') }}" class="btn btn-outline-secondary btn-sm mx-auto">Profile</a>
+	<a href="{{ path('preferences.edit') }}" class="btn btn-outline-secondary btn-sm mx-auto">Settings</a>
+	{% if app.user.trashed %}
+		<a href="{{ path('user.restore.self') }}" class="btn btn-outline-warning btn-sm mx-auto">Restore Account</a>
+		{% else %}
+			<a href="{{ path('user.trash.self') }}" class="btn btn-outline-warning btn-sm mx-auto">Trash Account</a>
+	{% endif %}
+</div>

@@ -1,0 +1,11 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}
+	All conversations
+{% endblock %}
+
+{% block body %}
+	{% for conversation in conversations %}
+		{{ conversation.id }}
+	{% endfor %}
+{% endblock %}

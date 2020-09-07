@@ -1,0 +1,72 @@
+{% if notification is postLikeNotification %}
+	<a href="{{ path('profile-show', { 'username': notification.likedBy.username }) }}">@{{ notification.likedBy.username }}</a>
+	likes your
+	<a href="{{ path('post-show-single', { 'id': notification.post.id }) }}">post</a>
+{% endif %}
+
+{% if notification is commentLikeNotification %}
+	<a href="{{ path('profile-show', { 'username': notification.likedBy.username }) }}">@{{ notification.likedBy.username }}</a>
+	likes your comment on
+	<a href="{{ path('post-show-single', { 'id': notification.post.id }) }}">post</a>
+{% endif %}
+
+{% if notification is commentPostedNotification %}
+	<a href="{{ path('profile-show', { 'username': notification.postedBy.username }) }}">@{{ notification.postedBy.username }}</a>
+	has posted a reply to your
+	<a href="{{ path('post-show-single', { 'id': notification.post.id }) }}">post</a>
+{% endif %}
+
+{% if notification is followNotification %}
+	<a href="{{ path('profile-show', { 'username': notification.followedBy.username }) }}">
+		@{{ notification.followedBy.username }}, {{ notification.followedBy.fullname }}
+	</a>
+	has started following you!
+{% endif %}
+
+{% if notification is followedUserCreatesAPostNotification %}
+	User
+	<a href="{{ path('profile-show', { 'username': notification.post.user.username }) }}">@{{ notification.post.user.username }}</a>
+	you are following, has posted a new
+	<a href="{{ path('post-show-single', { 'id': notification.post.id }) }}">post</a>
+{% endif %}
+
+{% if notification is followedUserCreatesACommentNotification %}
+	User
+	<a href="{{ path('profile-show', { 'username': notification.comment.user.username }) }}">@{{ notification.comment.user.username }}</a>
+	you are following, has posted a new
+	<a href="{{ path('comment-show', {'id': notification.comment.id}) }}">comment</a>
+	on
+	<a href="{{ path('post-show-single', { 'id': notification.post.id }) }}">post</a>
+{% endif %}
+
+{% if notification is postReportedNotification %}
+	<a href="{{ path('post-show-single', {'id': notification.post.id }) }}">Post</a>
+	has been reported as inappropriate. Please review it in
+	<a href="{{ path('mod-reported-posts') }}">reported posts</a>
+{% endif %}
+
+{% if notification is commentReportedNotification %}
+	<a href="{{ path('comment-show', {'id': notification.comment.id }) }}">Comment</a>
+	has been reported as inappropriate. Please review it in
+	<a href="{{ path('mod-reported-comments') }}">reported comments</a>
+{% endif %}
+
+{% if notification is complaintCreatedNotification %}
+	<a href="{{ path('profile-show', {'id': notification.postedBy.username }) }}">{{ notification.postedBy.username }}</a>
+	has posted a complaint.
+	<p class="alert alert-dark">{{ notification.complaint }}</p>
+	Review it in
+	<a href="#">complaints</a>
+{% endif %}
+
+{% if notification is userMentionedInCommentNotification %}
+	User <a href="{{ path('profile-show', {'username': notification.post.user.username}) }}">{{ notification.post.user.username }}</a>
+	has mentioned you in a recent
+	<a href="{{ path('post-show-single', {'id': notification.post.id}) }}">post</a>
+{% endif %}
+
+{% if notification is userMentionedInPostNotification %}
+	User <a href="{{ path('profile-show', {'username': notification.comment.user.username}) }}">{{ notification.comment.user.username }}</a>
+	has mentioned you in a recent
+	<a href="{{ path('comment-show', {'id': notification.comment.id}) }}">post</a>
+{% endif %}

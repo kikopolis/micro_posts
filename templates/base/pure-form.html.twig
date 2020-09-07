@@ -1,0 +1,20 @@
+{% extends 'base/base.html.twig' %}
+
+{% block body %}
+	<div class="row mt-5">
+		<div class="col-12 mx-auto shadow p-3">
+			<h1 class="text-center text-black-50">{{ title }}</h1>
+			{% if message is defined %}
+				<div class="alert alert-info">
+					<p>{{ message }}</p>
+				</div>
+			{% endif %}
+			{{ include('base/_form.html.twig') }}
+		</div>
+	</div>
+{% endblock %}
+
+{% block title %}
+	{{ title }}
+{% endblock %}
+
