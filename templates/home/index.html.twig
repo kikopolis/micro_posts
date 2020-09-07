@@ -1,9 +1,16 @@
 {% extends 'base/base.html.twig' %}
 
 {% block body %}
-    <h5>Welcome to kikopolis.tech MicroPost platform!!</h5>
-	<p>We have a symfony backend together with Vue.js frontend. Browse and enjoy.</p>
-	<p>Link to the github if you need it - <a href="https://github.com/kikod4mn/symfony-micro-posts-app" target="_blank">click here.</a></p>
+	<h5>Welcome to kikopolis.tech MicroPost platform!!</h5>
+	<p>This is a simple social media post app. Post limit is 280 characters.</p>
+	<div class="alert alert-warning">
+		<h4 class="alert-heading">Notice</h4>
+		<hr>
+		<p>No public posting. Since I cannot be bothered to moderate this page, all comments and posts require approval before public view.</p>
+		<p>Posting works and can be previewed by the owner, but un-approved content is hidden.</p>
+	</div>
+	
+	<p>Link to the github if you need it - <a href="https://github.com/kikod4mn/micro_posts" target="_blank">click here.</a></p>
 {% endblock %}
 
 

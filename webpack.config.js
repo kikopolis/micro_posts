@@ -12,7 +12,7 @@ Encore
     .setOutputPath('public/build/')
     .setPublicPath('/build')
     .addEntry('js/app', [
-
+        
         './assets/js/app.js',
     ])
     .addStyleEntry('css/app', [
@@ -29,21 +29,21 @@ Encore
     .autoProvidejQuery()
     .enableVueLoader()
     .addPlugin(new PurgecssPlugin({
-        paths: glob.sync([
-            'templates/**/*.html.twig'
-
-        ]),
-        extractors: [
-            {
-                extractor: class {
-                    static extract(content) {
-                        return content.match(/[A-z0-9-:\/]+/g) || []
-                    }
-                },
-                extensions: ['twig']
-            }
-        ]
-    }))
+                                      paths: glob.sync([
+                                                           'templates/**/*.html.twig'
+        
+                                                       ]),
+                                      extractors: [
+                                          {
+                                              extractor: class {
+                                                  static extract(content) {
+                                                      return content.match(/[A-z0-9-:\/]+/g) || []
+                                                  }
+                                              },
+                                              extensions: ['twig']
+                                          }
+                                      ]
+                                  }))
 ;
 
 module.exports = Encore.getWebpackConfig();
