@@ -8,7 +8,6 @@ use App\Controller\AbstractController;
 use App\Controller\Concerns\SanitizeConcern;
 use App\Controller\Concerns\TagUserConcern;
 use App\Entity\Comment;
-use App\Entity\Notification\CommentPostedNotification;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Event\AuthorableCreatedEvent;
@@ -18,6 +17,7 @@ use App\Event\Comment\MentionedInCommentEvent;
 use App\Event\TimeStampableCreatedEvent;
 use App\Form\CommentType;
 use App\Security\Voter\Contracts\VotablesContract;
+use App\Service\Contracts\FlashContract;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -128,10 +128,15 @@ class Create extends AbstractController
 			// Flush again to save notifications and modified body.
 			$this->entityManager->flush();
 			
+			$this->addFlash(
+				FlashContract::SUCCESS,
+				'Comment added! Before the public can view this comment, a moderator must approve it!'
+			);
+			
 			return $this->redirectToRoute(
-				'post.show',
+				'comment.preview',
 				[
-					'id' => $comment->getPost()->getId(),
+					'id' => $comment->getId(),
 				]
 			);
 		}

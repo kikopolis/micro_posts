@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace App\Tests\functional\Post;
+namespace App\Tests\functional\Comment;
 
-use App\Entity\Post;
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Tests\functional\Concerns\EntityManagerConcern;
 use App\Tests\functional\Concerns\LoginConcern;
@@ -14,9 +14,10 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
- * @covers \App\Controller\Post\Report
+ * @covers  \App\Controller\Comment\Report
  * Class ReportCest
- * @package App\Tests\functional\Post
+ * @package App\Tests\functional\Comment
+ * @author  Kristo Leas <kristo.leas@gmail.com>
  */
 class ReportCest
 {
@@ -24,7 +25,7 @@ class ReportCest
 	use EntityManagerConcern;
 	
 	/**
-	 * @param  FunctionalTester  $I
+	 * @param   FunctionalTester   $I
 	 * @throws NoResultException
 	 * @throws NonUniqueResultException
 	 */
@@ -44,46 +45,38 @@ class ReportCest
 		
 		$em = $this->getEm($I);
 		
-		/** @var Post $post */
-		$post = $em
+		/** @var Comment $comment */
+		$comment = $em
 			->createQueryBuilder()
-			->select('p')
-			->from('App\Entity\Post', 'p')
-			->where('p.author != :author')
+			->select('c')
+			->from('App\Entity\Comment', 'c')
+			->where('c.author = :author')
 			->setParameter('author', $user)
 			->setMaxResults(1)
 			->getQuery()
 			->getSingleResult()
 		;
 		
-		$I->assertEquals(
-			0,
-			$post->getLikedBy()->count()
-		);
-		
-		$I->amOnPage("/posts/{$post->getId()}/report");
+		$I->amOnPage("/comments/{$comment->getId()}/report");
 		
 		$I->seeResponseCodeIs(200);
 		
-		$I->see('Post reported as inappropriate. A mod will review it asap.');
+		$I->see('Comment reported as inappropriate. A mod will review it asap.');
 		
-		/** @var Post $post */
-		$post = $I->grabEntityFromRepository(
-			Post::class,
+		$I->see($comment->getBody());
+		
+		/** @var Comment $comment */
+		$comment = $I->grabEntityFromRepository(
+			Comment::class,
 			[
-				'id' => $post->getId(),
+				'id' => $comment->getId(),
 			]
 		);
 		
-		$I->assertEquals(
-			1,
-			$post->getReportedBy()->count()
-		);
-		
-		$I->assertTrue($post->isReported());
+		$I->assertTrue($comment->isReported());
 		
 		$I->assertTrue(
-			$post->getReportedBy()->exists(
+			$comment->getReportedBy()->exists(
 				fn(int $key, User $element): bool => $element->getId() === $user->getId()
 			)
 		);

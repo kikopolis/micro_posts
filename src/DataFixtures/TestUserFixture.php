@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
+use App\Entity\Contracts\ReportableContract;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\UserPreferences;
@@ -55,7 +57,9 @@ class TestUserFixture extends BaseFixture
 		$activeTestUser = $this->activeTestUser($manager);
 		
 		$this->posts($manager, $testUser);
+		$this->comments($manager, $testUser);
 		$this->posts($manager, $activeTestUser);
+		$this->comments($manager, $activeTestUser);
 	}
 	
 	/**
@@ -230,19 +234,85 @@ class TestUserFixture extends BaseFixture
 	}
 	
 	/**
-	 * @param   Post   $post
+	 * @param   ObjectManager   $manager
+	 * @param   User            $user
 	 * @throws Exception
 	 */
-	private function report(Post $post): void
+	protected function comments(ObjectManager $manager, User $user)
+	{
+		$faker = Factory::create();
+		
+		// APPROVED COMMENTS
+		$this->createMany(
+			Comment ::class, 20, function (Comment $comment, $i) use ($user, $faker) {
+			$comment->setBody($faker->text(240));
+			$comment->setAuthor($user);
+			$comment->setPost($this->getRandomReference(Post::class));
+			$comment->setCreationTimestamps();
+			
+			$comment->approve();
+			$comment->setApprovedBy($comment->getAuthor());
+		}
+		);
+		
+		// COMMENTS
+		$this->createMany(
+			Comment ::class, 20, function (Comment $comment, $i) use ($user, $faker) {
+			$comment->setBody($faker->text(240));
+			$comment->setAuthor($user);
+			$comment->setPost($this->getRandomReference(Post::class));
+			$comment->setCreationTimestamps();
+		}
+		);
+		
+		// TRASHED COMMENTS
+		$this->createMany(
+			Comment ::class, 20, function (Comment $comment, $i) use ($user, $faker) {
+			$comment->setBody($faker->text(240));
+			$comment->setAuthor($user);
+			$comment->setPost($this->getRandomReference(Post::class));
+			$comment->setCreationTimestamps();
+			
+			$comment->trash();
+			$comment->setTrashedBy($comment->getAuthor());
+		}
+		);
+		
+		// APPROVED AND REPORTED COMMENTS
+		$this->createMany(
+			Comment ::class, 20, function (Comment $comment, $i) use ($user, $faker) {
+			$comment->setBody($faker->text(240));
+			$comment->setAuthor($user);
+			$comment->setPost($this->getRandomReference(Post::class));
+			$comment->setCreationTimestamps();
+			
+			for ($i = 0; $i < 4; $i++) {
+				
+				$this->report($comment);
+			}
+			
+			$comment->approve();
+			$comment->setApprovedBy($comment->getAuthor());
+		}
+		);
+		
+		$manager->flush();
+	}
+	
+	/**
+	 * @param   Post|Comment|ReportableContract   $entity
+	 * @throws Exception
+	 */
+	private function report($entity): void
 	{
 		/** @var User $reporter */
 		$reporter = $this->getRandomReference(User::class);
 		
-		if ($reporter->getUsername() === $post->getAuthor()->getUsername()) {
+		if ($reporter->getUsername() === $entity->getAuthor()->getUsername()) {
 			
-			$this->report($post);
+			$this->report($entity);
 		}
 		
-		$post->report($reporter);
+		$entity->report($reporter);
 	}
 }

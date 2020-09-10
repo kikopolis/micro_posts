@@ -6,11 +6,9 @@ namespace App\Controller\Post;
 
 use App\Controller\AbstractController;
 use App\Controller\Concerns\DisableDoctrineFiltersConcern;
-use App\Entity\Post;
 use App\Event\Post\ViewEvent;
 use App\Repository\PostRepository;
 use App\Security\Voter\Contracts\VotablesContract;
-use App\Service\Contracts\FlashContract;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,11 +70,8 @@ class Preview extends AbstractController
 		
 		$post = $this->postRepository->find($id);
 		
-		if (
-			! $post
-			|| ! $this->isGranted(
-				VotablesContract::VIEW, $post
-			)) {
+		if (! $post
+			|| ! $this->isGranted(VotablesContract::VIEW, $post)) {
 			
 			throw $this->createNotFoundException('Post not found.');
 		}

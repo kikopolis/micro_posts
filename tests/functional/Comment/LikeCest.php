@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace App\Tests\functional\Post;
+namespace App\Tests\functional\Comment;
 
-use App\Entity\Post;
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Tests\functional\Concerns\EntityManagerConcern;
 use App\Tests\functional\Concerns\LoginConcern;
@@ -14,23 +14,26 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
- * @covers \App\Controller\Post\Report
- * Class ReportCest
- * @package App\Tests\functional\Post
+ * @covers  \App\Controller\Comment\Like
+ * Class LikeCest
+ * @package App\Tests\functional\Comment
+ * @author  Kristo Leas <kristo.leas@gmail.com>
  */
-class ReportCest
+class LikeCest
 {
 	use LoginConcern;
 	use EntityManagerConcern;
 	
 	/**
-	 * @param  FunctionalTester  $I
+	 * @param   FunctionalTester   $I
 	 * @throws NoResultException
 	 * @throws NonUniqueResultException
 	 */
-	public function testReport(FunctionalTester $I)
+	public function testLike(FunctionalTester $I)
 	{
 		$userData = Fixtures::get('activeTestUser');
+		
+		$em = $this->getEm($I);
 		
 		$this->login($I, $userData['username'], $userData['password']);
 		
@@ -42,50 +45,52 @@ class ReportCest
 			]
 		);
 		
-		$em = $this->getEm($I);
-		
-		/** @var Post $post */
-		$post = $em
+		/** @var Comment $comment */
+		$comment = $em
 			->createQueryBuilder()
-			->select('p')
-			->from('App\Entity\Post', 'p')
-			->where('p.author != :author')
+			->select('c')
+			->from('App\Entity\Comment', 'c')
+			->where('c.author != :author')
 			->setParameter('author', $user)
 			->setMaxResults(1)
 			->getQuery()
 			->getSingleResult()
 		;
 		
-		$I->assertEquals(
-			0,
-			$post->getLikedBy()->count()
+		$I->assertFalse(
+			$comment->getLikedBy()->contains($user)
 		);
 		
-		$I->amOnPage("/posts/{$post->getId()}/report");
+		$I->assertEquals(
+			0,
+			$comment->getLikedBy()->count()
+		);
+		
+		$I->amOnPage("/comments/{$comment->getId()}/like");
 		
 		$I->seeResponseCodeIs(200);
 		
-		$I->see('Post reported as inappropriate. A mod will review it asap.');
-		
-		/** @var Post $post */
-		$post = $I->grabEntityFromRepository(
-			Post::class,
+		/** @var Comment $comment */
+		$comment = $I->grabEntityFromRepository(
+			Comment::class,
 			[
-				'id' => $post->getId(),
+				'id' => $comment->getId(),
 			]
 		);
 		
 		$I->assertEquals(
 			1,
-			$post->getReportedBy()->count()
+			$comment->getLikedBy()->count()
 		);
 		
-		$I->assertTrue($post->isReported());
-		
 		$I->assertTrue(
-			$post->getReportedBy()->exists(
+			$comment->getLikedBy()->exists(
 				fn(int $key, User $element): bool => $element->getId() === $user->getId()
 			)
 		);
+		
+		$I->see('Like added successfully!');
+		
+		$I->see($comment->getBody());
 	}
 }

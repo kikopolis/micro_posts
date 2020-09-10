@@ -43,7 +43,7 @@ class RestoreCest
 		);
 		
 		$em = $this->getEmWithoutFilters($I);
-		
+	 
 		/** @var Post $post */
 		$post = $em
 			->createQueryBuilder()

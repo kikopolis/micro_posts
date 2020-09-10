@@ -1,0 +1,12 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}Previewing single comment{% endblock %}
+
+{% block body %}
+	<div class="row pt-4">
+		<h4>This is just a preview. For the public to see this comment, a moderator must approve this.</h4>
+	</div>
+	<div class="row">
+		{{ include('comment/_comment.html.twig') }}
+	</div>
+{% endblock %}

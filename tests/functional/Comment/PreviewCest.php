@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace App\Tests\functional\Post;
+namespace App\Tests\functional\Comment;
 
-use App\Entity\Post;
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Tests\functional\Concerns\EntityManagerConcern;
 use App\Tests\functional\Concerns\LoginConcern;
@@ -14,12 +14,12 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
- * @covers \App\Controller\Post\UnPublish
- * Class UnPublishCest
- * @package App\Tests\functional\Post
+ * @covers  \App\Controller\Comment\Preview
+ * Class PreviewCest
+ * @package App\Tests\functional\Comment
  * @author  Kristo Leas <kristo.leas@gmail.com>
  */
-class UnPublishCest
+class PreviewCest
 {
 	use LoginConcern;
 	use EntityManagerConcern;
@@ -29,7 +29,7 @@ class UnPublishCest
 	 * @throws NoResultException
 	 * @throws NonUniqueResultException
 	 */
-	public function testUnPublish(FunctionalTester $I)
+	public function testPreview(FunctionalTester $I)
 	{
 		$userData = Fixtures::get('activeTestUser');
 		
@@ -43,32 +43,25 @@ class UnPublishCest
 			]
 		);
 		
-		$em = $this->getEm($I);
+		$em = $this->getEmWithoutFilters($I);
 		
-		/** @var Post $post */
-		$post = $em
+		/** @var Comment $comment */
+		$comment = $em
 			->createQueryBuilder()
-			->select('p')
-			->from('App\Entity\Post', 'p')
-			->where('p.author = :author')
+			->select('c')
+			->from('App\Entity\Comment', 'c')
+			->where('c.author = :author')
+			->andWhere('c.approvedAt IS NULL')
 			->setParameter('author', $user)
 			->setMaxResults(1)
 			->getQuery()
 			->getSingleResult()
 		;
 		
-		$I->amOnPage("/posts/{$post->getId()}/un-publish");
+		$I->amOnPage("/comments/{$comment->getId()}/preview");
 		
 		$I->seeResponseCodeIs(200);
 		
-		/** @var Post $post */
-		$post = $em->find(Post::class, $post->getId());
-		
-		$I->assertFalse($post->isPublished());
-		
-		$I->assertEquals(
-			$user->getId(),
-			$post->getUnPublishedBy()->getId()
-		);
+		$I->see($comment->getBody());
 	}
 }

@@ -8,11 +8,11 @@ use App\Controller\AbstractController;
 use App\Controller\Concerns\DisableDoctrineFiltersConcern;
 use App\Controller\Concerns\SanitizeConcern;
 use App\Controller\Concerns\TagUserConcern;
-use App\Entity\Comment;
 use App\Entity\User;
 use App\Event\Comment\MentionedInCommentEvent;
 use App\Event\Comment\UpdateEvent;
 use App\Event\TimeStampableUpdatedEvent;
+use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Security\Voter\Contracts\VotablesContract;
 use App\Service\Contracts\FlashContract;
@@ -98,7 +98,7 @@ class Update extends AbstractController
 		
 		$this->denyAccessUnlessGranted(VotablesContract::EDIT, $comment);
 		
-		$form = $this->createForm(Comment::class, $comment);
+		$form = $this->createForm(CommentType::class, $comment);
 		
 		$form->handleRequest($request);
 		
@@ -129,9 +129,9 @@ class Update extends AbstractController
 			);
 			
 			return $this->redirectToRoute(
-				'post.show',
+				'comment.preview',
 				[
-					'id' => $comment->getPost()->getId(),
+					'id' => $comment->getId(),
 				]
 			);
 		}
@@ -139,6 +139,7 @@ class Update extends AbstractController
 		return $this->render(
 			'comment/create.html.twig',
 			[
+				'post' => $comment->getPost(),
 				'form' => $form->createView(),
 			]
 		);

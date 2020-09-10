@@ -6,6 +6,7 @@ namespace App\Tests\functional\Post;
 
 use App\Controller\Concerns\DisableDoctrineFiltersConcern;
 use App\Entity\Post;
+use App\Entity\User;
 use App\Tests\functional\Concerns\EntityManagerConcern;
 use App\Tests\functional\Concerns\LoginConcern;
 use App\Tests\FunctionalTester;
@@ -14,6 +15,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
+ * @covers \App\Controller\Post\Update
  * Class UpdateCest
  * @package App\Tests\functional\Post
  * @author  Kristo Leas <kristo.leas@gmail.com>
@@ -37,11 +39,21 @@ class UpdateCest
 		
 		$em = $this->getEm($I);
 		
+		/** @var User $user */
+		$user = $I->grabEntityFromRepository(
+			User::class,
+			[
+				'username' => $userData['username'],
+			]
+		);
+		
 		/** @var Post $post */
 		$post = $em
 			->createQueryBuilder()
 			->select('p')
 			->from('App\Entity\Post', 'p')
+			->where('p.author = :author')
+			->setParameter('author', $user)
 			->setMaxResults(1)
 			->getQuery()
 			->getSingleResult()
@@ -91,12 +103,22 @@ class UpdateCest
 		
 		$em = $this->getEmWithoutFilters($I);
 		
+		/** @var User $user */
+		$user = $I->grabEntityFromRepository(
+			User::class,
+			[
+				'username' => $userData['username'],
+			]
+		);
+		
 		/** @var Post $post */
 		$post = $em
 			->createQueryBuilder()
 			->select('p')
 			->from('App\Entity\Post', 'p')
 			->where('p.publishedAt IS NULL')
+			->andWhere('p.author = :author')
+			->setParameter('author', $user)
 			->setMaxResults(1)
 			->getQuery()
 			->getSingleResult()
@@ -150,12 +172,22 @@ class UpdateCest
 		
 		$em = $this->getEmWithoutFilters($I);
 		
+		/** @var User $user */
+		$user = $I->grabEntityFromRepository(
+			User::class,
+			[
+				'username' => $userData['username'],
+			]
+		);
+		
 		/** @var Post $post */
 		$post = $em
 			->createQueryBuilder()
 			->select('p')
 			->from('App\Entity\Post', 'p')
 			->where('p.approvedAt IS NULL')
+			->andWhere('p.author = :author')
+			->setParameter('author', $user)
 			->setMaxResults(1)
 			->getQuery()
 			->getSingleResult()
@@ -209,12 +241,22 @@ class UpdateCest
 		
 		$em = $this->getEm($I);
 		
+		/** @var User $user */
+		$user = $I->grabEntityFromRepository(
+			User::class,
+			[
+				'username' => $userData['username'],
+			]
+		);
+		
 		/** @var Post $post */
 		$post = $em
 			->createQueryBuilder()
 			->select('p')
 			->from('App\Entity\Post', 'p')
 			->where('p.reported = true')
+			->andWhere('p.author = :author')
+			->setParameter('author', $user)
 			->setMaxResults(1)
 			->getQuery()
 			->getSingleResult()
@@ -264,19 +306,28 @@ class UpdateCest
 		
 		$em = $this->getEmWithoutFilters($I);
 		
+		/** @var User $user */
+		$user = $I->grabEntityFromRepository(
+			User::class,
+			[
+				'username' => $userData['username'],
+			]
+		);
+		
 		/** @var Post $post */
 		$post = $em
 			->createQueryBuilder()
 			->select('p')
 			->from('App\Entity\Post', 'p')
 			->where('p.trashedAt IS NOT NULL')
+			->andWhere('p.author = :author')
+			->setParameter('author', $user)
 			->setMaxResults(1)
 			->getQuery()
 			->getSingleResult()
 		;
 		
 		$body = 'This is an edited post! Edit is successful!';
-		
 		
 		$I->amOnPage("/posts/{$post->getId()}/show");
 		

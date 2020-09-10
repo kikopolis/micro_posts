@@ -1,12 +1,24 @@
 {% extends 'base/base.html.twig' %}
 
 {% block body %}
-	<h2>Registration issues</h2>
-	<h4>I have not received a registration confirmation token!</h4>
-	<p>Click <a href="{{ path('new.account.activation.token') }}">here</a> to request a new code</p>
+	<h1>Frequently Asked Questions</h1>
+	<div class="shadow-lg rounded p-4 mb-3 mt-2">
+		<h4>I have not received a registration confirmation token!</h4>
+		<p>Click <a href="{{ path('new.account.activation.token') }}">here</a> to request a new code.</p>
+	</div>
+	
+	<div class="shadow-lg rounded p-4 mb-3 mt-2">
+		<h4>I have forgotten my password!</h4>
+		<p>Click <a href="{{ path('forgot.password') }}">here</a> to request a reset code to your email.</p>
+	</div>
+	
+	<div class="shadow-lg rounded p-4 mb-3 mt-2">
+		<h4>I can't see my posts or comments!</h4>
+		<p>Only approved and published posts and comments can be seen on the post list. Moderator is not present to approve though.</p>
+	</div>
 {% endblock %}
 
 {% block title %}
-Kikopolis Help And FAQ section
+	Kikopolis Help And FAQ section
 {% endblock %}
 

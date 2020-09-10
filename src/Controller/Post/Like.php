@@ -41,9 +41,9 @@ class Like extends AbstractController
 	
 	/**
 	 * Like constructor.
-	 * @param  EntityManagerInterface    $entityManager
-	 * @param  EventDispatcherInterface  $eventDispatcher
-	 * @param  PostRepository            $postRepository
+	 * @param   EntityManagerInterface     $entityManager
+	 * @param   EventDispatcherInterface   $eventDispatcher
+	 * @param   PostRepository             $postRepository
 	 */
 	public function __construct(
 		EntityManagerInterface $entityManager,
@@ -63,8 +63,8 @@ class Like extends AbstractController
 	 *     methods={"GET", "POST"},
 	 *     requirements={"id"="\d+"}
 	 * )
-	 * @param  int      $id
-	 * @param  Request  $request
+	 * @param   int       $id
+	 * @param   Request   $request
 	 * @return Response
 	 */
 	public function __invoke(int $id, Request $request): Response
@@ -102,12 +102,9 @@ class Like extends AbstractController
 			throw $this->createNotFoundException('Post not found.');
 		}
 		
-		/** @var User $user */
-		$user = $this->getUser();
-		
 		$this->eventDispatcher->dispatch(
 			new LikeEvent(
-				$user,
+				$this->getUser(),
 				$post
 			)
 		);

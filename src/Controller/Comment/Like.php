@@ -5,11 +5,14 @@ declare(strict_types = 1);
 namespace App\Controller\Comment;
 
 use App\Controller\AbstractController;
-use App\Entity\Comment;
+use App\Controller\Concerns\ExpectsJsonConcern;
 use App\Entity\User;
 use App\Event\Comment\LikeEvent;
+use App\Repository\CommentRepository;
+use App\Service\Contracts\FlashContract;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @package App\Controller\Comment
  */
 class Like extends AbstractController
-{
+{use ExpectsJsonConcern;
 	/**
 	 * @var EntityManagerInterface
 	 */
@@ -30,47 +33,70 @@ class Like extends AbstractController
 	private EventDispatcherInterface $eventDispatcher;
 	
 	/**
+	 * @var CommentRepository
+	 */
+	private CommentRepository $commentRepository;
+	
+	/**
 	 * Like constructor.
-	 * @param  EntityManagerInterface    $entityManager
-	 * @param  EventDispatcherInterface  $eventDispatcher
+	 * @param   EntityManagerInterface     $entityManager
+	 * @param   EventDispatcherInterface   $eventDispatcher
+	 * @param   CommentRepository          $commentRepository
 	 */
 	public function __construct(
 		EntityManagerInterface $entityManager,
-		EventDispatcherInterface $eventDispatcher
+		EventDispatcherInterface $eventDispatcher,
+		CommentRepository $commentRepository
 	)
 	{
-		$this->entityManager   = $entityManager;
-		$this->eventDispatcher = $eventDispatcher;
+		$this->entityManager     = $entityManager;
+		$this->eventDispatcher   = $eventDispatcher;
+		$this->commentRepository = $commentRepository;
 	}
 	
 	/**
 	 * @Route(
 	 *     "/comments/{id}/like",
 	 *     name="comment.like",
-	 *     methods={"POST"},
+	 *     methods={"GET", "POST"},
 	 *     requirements={"id"="\d+"}
 	 * )
-	 * @param  Comment  $comment
+	 * @param   int       $id
+	 * @param   Request   $request
 	 * @return Response
 	 */
-	public function __invoke(Comment $comment): Response
+	public function __invoke(int $id, Request $request): Response
 	{
-		if (! $this->isGranted('ROLE_USER')) {
+		if (! $this->isGranted(User::ROLE_USER)) {
 			
-			return $this->json(
-				null,
-				Response::HTTP_UNAUTHORIZED
+			if ($this->expectsJson($request)) {
+				
+				return $this->json(
+					null,
+					Response::HTTP_UNAUTHORIZED
+				);
+			}
+			
+			$this->addFlash(
+				FlashContract::WARNING,
+				'You must be logged in for this action.'
 			);
+			
+			return $this->redirectToRoute('login');
 		}
 		
-		/** @var User $user */
-		$user = $this->getUser();
+		$comment = $this->commentRepository->find($id);
 		
-		// User cannot like a comment they have already liked or if they are the author
-		if (
-			$comment->getLikedBy()->contains($user)
-			|| $comment->getAuthor()->getId() === $user->getId()
-		) {
+		$this->eventDispatcher->dispatch(
+			new LikeEvent(
+				$this->getUser(),
+				$comment
+			)
+		);
+		
+		$this->entityManager->flush();
+		
+		if ($this->expectsJson($request)) {
 			
 			return $this->json(
 				[
@@ -79,18 +105,15 @@ class Like extends AbstractController
 			);
 		}
 		
-		$this->eventDispatcher->dispatch(
-			new LikeEvent(
-				$user,
-				$comment
-			)
+		$this->addFlash(
+			FlashContract::SUCCESS,
+			'Like added successfully!'
 		);
 		
-		$this->entityManager->flush();
-		
-		return $this->json(
+		return $this->redirectToRoute(
+			'post.show',
 			[
-				'likeCount' => $comment->getLikeCount(),
+				'id' => $comment->getPost()->getId(),
 			]
 		);
 	}
